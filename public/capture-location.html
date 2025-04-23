@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head><title>Share Your Location</title></head>
+<body>
+  <p>Requesting your location…</p>
+  <script>
+    const requestId = new URLSearchParams(window.location.search).get('id');
+
+    function sendLocation(lat, lon) {
+      fetch("https://YOUR-API-HERE.com/api/location", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          requestId: requestId,
+          latitude: lat,
+          longitude: lon
+        })
+      }).then(() => {
+        document.body.innerHTML = "<p>✅ Location sent. You're good!</p>";
+      }).catch(err => {
+        document.body.innerHTML = `<p>Error: ${err.message}</p>`;
+      });
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      pos => sendLocation(pos.coords.latitude, pos.coords.longitude),
+      err => {
+        document.body.innerHTML = `<p>Location error: ${err.message}</p>`;
+      }
+    );
+  </script>
+</body>
+</html>
